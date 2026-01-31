@@ -1,0 +1,65 @@
+###################### Les PROVIDERS ######################
+
+## trouver tous les providers ##
+Find-PackageProvider
+
+## installer le provider Chocolatey
+Install-PackageProvider chocolatey
+
+## confirmer Chocolatey comme Provider de confiance (évite de confirmer avant les installations ##
+Set-PackageSource -Name chocolatey -Trusted
+
+## trouver les packets disponibles sur chocolatey (adobe)
+Find-Package -Name *Adobe* -Source Chocolatey
+
+## installer un pachet précis de chocolatey (adobe Reader par exemple)
+Install-Package -Name AdobeReader -ProviderName Chocolatey
+
+## désinstaller une application installée via PowerShell (à tester)
+Remove-AppxPackage [App Name]
+
+###################### MSIEXEC ######################
+
+/i = install
+/x = supprimer
+/norestart = ne redémarre pas après installation ou désinstallation
+/forcerestart = Force le redémarrage après l'installation
+/quiet = mode silence
+/passive = affiche une barre de progression
+
+
+## pour installer avec msiexec 
+msiexec.exe /i "CheminVersLeFichier.msi" /quiet
+
+## lister les applications
+Get-WmiObject -Class Win32_Product | Select-Object -Property Name
+
+## trouver l'IdentifyingNumber pour désinstaller l'application souhaitée (on utilise une variable $App qu'on utilisera dans la cmdlet suivante)
+$App = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "NomDeLApplication" }
+
+## désinstaller une application avec msiexec (/x pour désinstaller)
+msiexec.exe /x $App.IdentifyingNumber /quiet
+
+
+###################### Exemple pour Firefox ######################
+
+# Définir l'URL du fichier MSI de Firefox
+$firefoxUrl = "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=fr"
+
+# Définir le chemin où le fichier sera téléchargé
+$downloadPath = "$env:USERPROFILE\Downloads\FirefoxInstaller.msi"
+
+# Télécharger le fichier MSI
+Invoke-WebRequest -Uri $firefoxUrl -OutFile $downloadPath
+
+# Définir le chemin du fichier MSI
+$installerPath = "$downloadPath"
+
+# Installer Firefox en mode silencieux
+Start-Process -FilePath "msiexec.exe" -ArgumentList "/i $installerPath /quiet /norestart" -Wait
+
+
+###################### WINGET ######################
+
+## désisntaller une application du bureau 
+winget uninstall CoreTemp
