@@ -1,5 +1,18 @@
 # Liste de commandes utiles dans Powershell
 
+# Eviter les restrictions pour le lancement de scripts
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+# convertir un .ps1 en .exe avec ps2exe
+Install-Module -Name PS2EXE -Force -Scope CurrentUser -AllowClobber
+
+=> puis importer le module :
+Import-Module PS2EXE -Force
+
+==> ensuite lancer la commande de complation, exemple :
+Invoke-PS2EXE -InputFile "C:\Users\John\Documents\SCRIPTS\PS1\MDP_GENERATOR_(v1.0).ps1" -OutputFile "C:\Users\John\Documents\SCRIPTS\PS1\MDP_GENERATOR_(v1.0).exe" -NoConsole -NoAdmin
+
+
 ## liste les services actifs ou non dans une grille (gridview)
 gsv | ogv
 ====ou====
